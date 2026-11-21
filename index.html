@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0e11">
+  <meta name="robots" content="noindex, nofollow">
+  <title>End of Year Celebration 2026 · Photos</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.9em%22 font-size=%2290%22%3E%F0%9F%93%B8%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+  <script src="vendor/qrcode.js" defer></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+
+  <!-- Code screen -->
+  <section id="gate" class="gate" hidden>
+    <div class="gate-card">
+      <p class="eyebrow" data-subtitle></p>
+      <h1 data-title></h1>
+      <p class="muted">Enter the event code to see everyone's photos and videos and add yours.</p>
+      <form id="gate-form" autocomplete="off">
+        <input id="code" type="text" inputmode="text" autocapitalize="none" autocorrect="off" spellcheck="false"
+               placeholder="Event code" aria-label="Event code" required>
+        <button class="btn primary" id="gate-btn" type="submit">Enter</button>
+      </form>
+      <p id="gate-error" class="error" role="alert"></p>
+    </div>
+  </section>
+
+  <!-- Main app -->
+  <div id="app" hidden>
+    <header class="topbar">
+      <div class="title">
+        <h1 data-title></h1>
+        <p class="muted"><span data-subtitle></span> <span id="count"></span> <span id="admin-badge" class="badge" hidden>Organiser</span></p>
+      </div>
+      <nav class="actions">
+        <button id="btn-share" class="btn ghost" type="button">Share</button>
+        <button id="btn-select" class="btn ghost" type="button">Select</button>
+        <button id="btn-dlall" class="btn ghost" type="button">Download all</button>
+      </nav>
+    </header>
+
+    <div id="usage" class="usage" hidden><div class="usage-bar"><span id="usage-fill"></span></div><span id="usage-text"></span></div>
+
+    <main>
+      <div id="loading" class="empty">Loading…</div>
+      <div id="empty" class="empty" hidden>No photos yet. Be the first. Tap <b>Add photos &amp; videos</b>.</div>
+      <div id="grid" class="grid"></div>
+    </main>
+
+    <footer class="foot"><button id="btn-leave" class="linkbtn" type="button">Leave</button></footer>
+
+    <button id="fab" class="fab" type="button"><span class="plus">+</span> Add photos &amp; videos</button>
+    <input type="file" id="file-input" accept="image/*,video/*" multiple hidden>
+
+    <!-- Select mode bar -->
+    <div id="selectbar" class="selectbar" hidden>
+      <span id="sel-count">0 selected</span>
+      <button id="sel-all" class="btn ghost small" type="button">All</button>
+      <button id="sel-dl" class="btn primary small" type="button">Download</button>
+      <button id="sel-cancel" class="btn ghost small" type="button">Cancel</button>
+    </div>
+
+    <!-- Before choosing files -->
+    <div id="add" class="modal" hidden>
+      <div class="modal-card">
+        <h2>Add photos &amp; videos</h2>
+        <label class="field">
+          <span>Your name <em>(optional)</em></span>
+          <input id="name" type="text" maxlength="40" autocomplete="name" placeholder="So people know who took them">
+        </label>
+        <ul class="notes">
+          <li>Pick as many as you like. They upload in full quality.</li>
+          <li>Videos can be up to 60 seconds.</li>
+          <li>Keep this page open until the uploads finish.</li>
+        </ul>
+        <div class="row">
+          <button id="add-cancel" class="btn ghost" type="button">Cancel</button>
+          <button id="add-choose" class="btn primary" type="button">Choose photos &amp; videos</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload progress -->
+    <section id="uploads" class="sheet" hidden>
+      <div class="sheet-head">
+        <strong id="up-title">Uploading</strong>
+        <button id="up-close" class="linkbtn" type="button">Hide</button>
+      </div>
+      <p id="up-warn" class="muted small">Keep this page open until it's finished.</p>
+      <ul id="up-list" class="up-list"></ul>
+    </section>
+
+    <!-- Viewer -->
+    <div id="lightbox" class="lightbox" hidden>
+      <div class="lb-top">
+        <button id="lb-close" class="iconbtn" type="button" aria-label="Close">✕</button>
+        <span id="lb-pos" class="muted"></span>
+        <span class="spacer"></span>
+        <button id="lb-delete" class="btn danger small" type="button" hidden>Delete</button>
+        <a id="lb-download" class="btn primary small" href="#" rel="noopener">Download</a>
+      </div>
+      <div id="lb-stage" class="lb-stage"></div>
+      <button id="lb-prev" class="lb-nav prev" type="button" aria-label="Previous">‹</button>
+      <button id="lb-next" class="lb-nav next" type="button" aria-label="Next">›</button>
+      <div id="lb-info" class="lb-info"></div>
+    </div>
+
+    <!-- Share -->
+    <div id="share" class="modal" hidden>
+      <div class="modal-card center">
+        <h2>Share the album</h2>
+        <div id="qr" class="qr"></div>
+        <p id="share-link" class="link"></p>
+        <p class="muted small">People will also need the event code. It isn't in the link, so send it with the link.</p>
+        <div class="row wrap">
+          <button id="share-copy" class="btn ghost" type="button">Copy link</button>
+          <button id="share-native" class="btn ghost" type="button" hidden>Send…</button>
+          <a id="share-sign" class="btn ghost" href="sign.html" target="_blank" rel="noopener">Printable sign</a>
+          <button id="share-close" class="btn primary" type="button">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Download progress -->
+    <div id="dl" class="modal" hidden>
+      <div class="modal-card center">
+        <h2>Preparing download</h2>
+        <p id="dl-text" class="muted">Starting…</p>
+        <div class="progress"><span id="dl-fill"></span></div>
+        <div class="row"><button id="dl-cancel" class="btn ghost" type="button">Cancel</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>

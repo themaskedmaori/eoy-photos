@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Share your photos · sign</title>
+  <script src="config.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <style>
+    @page { size: A4 portrait; margin: 14mm; }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; color: #111; background: #e9e9ec; }
+    .sheet { width: 210mm; min-height: 297mm; margin: 20px auto; background: #fff; padding: 22mm 18mm; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .eyebrow { letter-spacing: .14em; text-transform: uppercase; font-size: 13pt; color: #d9541f; font-weight: 700; margin: 0 0 6mm; }
+    h1 { font-size: 34pt; line-height: 1.1; margin: 0 0 4mm; }
+    .sub { font-size: 15pt; color: #555; margin: 0 0 14mm; }
+    #qr { width: 120mm; height: 120mm; }
+    #qr svg { width: 100%; height: 100%; display: block; }
+    .steps { font-size: 17pt; margin: 12mm 0 0; line-height: 1.6; }
+    .code { margin-top: 10mm; font-size: 20pt; font-weight: 700; }
+    .code span { display: inline-block; min-width: 80mm; border-bottom: 2px solid #111; padding: 0 4mm; font-weight: 800; }
+    .url { margin-top: auto; padding-top: 10mm; font-size: 11pt; color: #666; word-break: break-all; }
+    .bar { max-width: 210mm; margin: 16px auto 0; display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; font-size: 15px; }
+    .bar input { height: 38px; padding: 0 10px; border: 1px solid #bbb; border-radius: 8px; font-size: 15px; }
+    .bar button { height: 38px; padding: 0 16px; border-radius: 999px; border: 0; background: #111; color: #fff; font-size: 15px; cursor: pointer; }
+    @media print { body { background: #fff; } .bar { display: none; } .sheet { margin: 0; width: auto; min-height: auto; padding: 0; } }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <label>Event code on the sign (or leave blank to write it in):
+      <input id="codeIn" placeholder="optional"></label>
+    <button onclick="window.print()">Print</button>
+  </div>
+  <div class="sheet">
+    <p class="eyebrow">Share your photos &amp; videos</p>
+    <h1 id="title"></h1>
+    <p class="sub" id="subtitle"></p>
+    <div id="qr"></div>
+    <p class="steps">Scan with your phone camera<br>Enter the code, then tap <b>Add photos &amp; videos</b></p>
+    <p class="code">Code: <span id="codeOut">&nbsp;</span></p>
+    <p class="url" id="url"></p>
+  </div>
+  <script>
+    var cfg = window.APP_CONFIG || {};
+    document.getElementById('title').textContent = cfg.EVENT_NAME || 'Event photos';
+    document.getElementById('subtitle').textContent = cfg.EVENT_SUBTITLE || '';
+    var u = new URLSearchParams(location.search).get('u') || (location.origin + location.pathname.replace(/sign\.html$/, ''));
+    document.getElementById('url').textContent = u;
+    var qr = qrcode(0, 'M'); qr.addData(u); qr.make();
+    document.getElementById('qr').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
+    document.getElementById('codeIn').addEventListener('input', function (e) {
+      document.getElementById('codeOut').textContent = e.target.value || ' ';
+    });
+  </script>
+</body>
+</html>
