@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow">
   <title>Share your photos · sign</title>
   <script src="config.js"></script>
-  <script src="vendor/qrcode.js"></script>
+  <script src="qrcode.js"></script>
   <style>
     @page { size: A4 portrait; margin: 14mm; }
     * { box-sizing: border-box; }
@@ -48,7 +48,7 @@
     document.getElementById('subtitle').textContent = cfg.EVENT_SUBTITLE || '';
     var u = new URLSearchParams(location.search).get('u') || (location.origin + location.pathname.replace(/sign\.html$/, ''));
     document.getElementById('url').textContent = u;
-    var qr = qrcode(0, 'M'); qr.addData(u); qr.make();
+    var qr = ode(0, 'M'); qr.addData(u); qr.make();
     document.getElementById('qr').innerHTML = qr.createSvgTag({ cellSize: 4, margin: 0, scalable: true });
     document.getElementById('codeIn').addEventListener('input', function (e) {
       document.getElementById('codeOut').textContent = e.target.value || ' ';
